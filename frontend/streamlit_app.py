@@ -11,6 +11,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+# ========== 背景 ==========
 st.markdown("""
 <style>
 .stApp::before {
@@ -18,10 +19,10 @@ st.markdown("""
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background-image: url("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1920&q=80");
+    background-image: url("../assets/background.jpg"); 
     background-size: cover;
     background-position: center;
-    opacity: 0.12;   /* 调低透明度，文字清晰 */
+    opacity: 0.12;
     z-index: -1;
     pointer-events: none;
 }
@@ -33,7 +34,15 @@ st.markdown("""
     background-size: cover, 200px 200px;
     background-repeat: no-repeat, repeat;
 }
-
+/* 保证内容区文字清晰 */
+.block-container {
+    background-color: rgba(255, 255, 255, 0.75) !important;
+    backdrop-filter: blur(4px);
+    border-radius: 10px;
+    padding: 1.5rem 2rem !important;
+    margin-left: 3rem !important;
+    max-width: 960px;
+}
 </style>
 """, unsafe_allow_html=True)
 
