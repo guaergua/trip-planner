@@ -38,7 +38,7 @@ st.markdown(
         /* 去掉原来默认白色 */
         background-color: transparent;
     }
-    /* 其他样式保持不变 */
+
     .block-container {
         padding-left: 3rem !important;
         padding-right: 3rem !important;
@@ -52,11 +52,12 @@ st.markdown(
         padding-top: 1rem;
         padding-bottom: 1rem;
     }
-    /* 结果框等没改动，略 */
+
     </style>
     """,
-    unsafe_allow_html=True
-)# ========== 页面标题（不用 Hero，用简单的 H2） ==========
+    unsafe_allow_html=True)
+
+# ========== 页面标题（不用 Hero，用简单的 H2） ==========
 st.markdown("## 旅行攻略生成器")
 st.markdown("填好下面几个信息，让 AI 帮你规划行程。")
 
