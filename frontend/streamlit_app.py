@@ -11,51 +11,30 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-st.markdown(
-    """
-    <style>
-    /* 伪元素：放置背景风景图，透明度 0.12，位于页面最底层 */
-    .stApp::before {
-        content: "";
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background-image: url("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1920&q=80");
-        background-size: cover;
-        background-position: center;
-        opacity: 0.12;
-        z-index: -1;
-        pointer-events: none;
-    }
-    /* 主背景：渐变 + 噪点纹理，叠加在图片之上（半透明） */
-    .stApp {
-        background-image: 
-            linear-gradient(135deg, #e8ecef 0%, #c9d6dc 100%),
-            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        background-blend-mode: overlay;   /* 渐变和噪点叠加 */
-        background-size: cover, 200px 200px;
-        background-repeat: no-repeat, repeat;
-        /* 去掉原来默认白色 */
-        background-color: transparent;
-    }
-
-    .block-container {
-        padding-left: 3rem !important;
-        padding-right: 3rem !important;
-        max-width: 960px;
-        margin-left: 0;
-        margin-right: auto;
-        /* 给内容区域增加轻微半透明背景，保证文字可读性 */
-        background: rgba(255,255,255,0.35);
-        backdrop-filter: blur(2px);
-        border-radius: 8px;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-    }
-
-    </style>
-    """,
-    unsafe_allow_html=True)
+st.markdown("""
+<style>
+.stApp::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-image: url("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1920&q=80");
+    background-size: cover;
+    background-position: center;
+    opacity: 0.12;   /* 调低透明度，文字清晰 */
+    z-index: -1;
+    pointer-events: none;
+}
+.stApp {
+    background-image: 
+        linear-gradient(135deg, #e8ecef 0%, #c9d6dc 100%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    background-blend-mode: overlay;
+    background-size: cover, 200px 200px;
+    background-repeat: no-repeat, repeat;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # ========== 页面标题（不用 Hero，用简单的 H2） ==========
 st.markdown("## 旅行攻略生成器")
