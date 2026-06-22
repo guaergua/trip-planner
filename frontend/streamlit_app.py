@@ -1,6 +1,8 @@
 import streamlit as st
 import requests
 import json
+import base64
+import os
 from datetime import datetime
 
 # ========== 页面设置 ==========
@@ -11,30 +13,45 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+# 定义一个将本地图片转为 Base64 编码的函数
+def get_base64_of_bin_file(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+# 检测并读取背景图片
+image_path = "../assets/background.jpg" 
+
+if os.path.exists(image_path):
+    img_base64 = get_base64_of_bin_file(image_path)
+    bg_img_url = f"data:image/jpeg;base64,{img_base64}"
+else:
+    bg_img_url = ""  # 如果找不到图片，先留空防止崩溃
+    st.sidebar.warning(f"⚠️ 未找到背景图片，请检查路径是否正确: {os.path.abspath(image_path)}")
+
 # ========== 背景 ==========
-st.markdown("""
+st.markdown(f"""
 <style>
-.stApp::before {
+.stApp::before {{
     content: "";
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background-image: url("../assets/background.jpg"); 
+    background-image: url("{bg_img_url}"); 
     background-size: cover;
     background-position: center;
     opacity: 0.12;
     z-index: -1;
     pointer-events: none;
-}
-.stApp {
+}}
+.stApp {{
     background-image: 
         linear-gradient(135deg, #e8ecef 0%, #c9d6dc 100%),
         url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     background-blend-mode: overlay;
     background-size: cover, 200px 200px;
     background-repeat: no-repeat, repeat;
-}
-
+}}
 </style>
 """, unsafe_allow_html=True)
 
