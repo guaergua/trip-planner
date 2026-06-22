@@ -5,38 +5,41 @@ import base64
 import os
 from datetime import datetime
 
-# ========== 页面设置 ==========
-st.set_page_config(
-    page_title="AI 旅游攻略",
-    page_icon="✈️",       # 允许 favicon 用 emoji，但界面上不用 emoji 做图标
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
+# ---------- 处理背景图片 ----------
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(script_dir)
+img_path = os.path.join(project_root, "assets", "background.avif")
 
-# ========== 背景 ==========
-st.markdown("""
+if os.path.exists(img_path):
+    with open(img_path, "rb") as f:
+        img_b64 = base64.b64encode(f.read()).decode()
+    img_url = f"data:image/avif;base64,{img_b64}"
+else:
+    img_url = "data:image/avif;base64,"  # 空图片，不显示
+
+# ---------- 自定义 CSS ----------
+st.markdown(f"""
 <style>
-.stApp::before {
+/* 去掉干扰背景 */
+.stApp {{
+    background: transparent !important;
+}}
+
+/* 背景图片伪元素 */
+.stApp::before {{
     content: "";
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background-image: url("../assets/background.avif"); 
+    background-image: url("{img_url}");
     background-size: cover;
     background-position: center;
-    opacity: 0.12;
+    opacity: 0.15;
     z-index: -1;
     pointer-events: none;
-}
-.stApp {
-    background-image: 
-        linear-gradient(135deg, #e8ecef 0%, #c9d6dc 100%),
-        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    background-blend-mode: overlay;
-    background-size: cover, 200px 200px;
-    background-repeat: no-repeat, repeat;
-}
+}}
 
+/* 其他你想要的样式... */
 </style>
 """, unsafe_allow_html=True)
 
