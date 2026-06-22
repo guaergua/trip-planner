@@ -33,6 +33,13 @@ st.markdown("""
     background-size: cover, 200px 200px;
     background-repeat: no-repeat, repeat;
 }
+/* 让内容区域的文字有清晰的白色背景 */
+.block-container {
+    background-color: rgba(255, 255, 255, 0.75) !important;
+    backdrop-filter: blur(4px);
+    border-radius: 10px;
+    padding: 1.5rem 2rem !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
