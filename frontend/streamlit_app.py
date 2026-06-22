@@ -18,12 +18,17 @@ st.markdown(
     /* 整个页面的背景：浅灰白到淡蓝绿的渐变，叠加噪点纹理（SVG 点阵） */
     .stApp {
         background-image: 
-            linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%),
-            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        background-blend-mode: overlay;
-        background-size: cover, 200px 200px;   /* 噪声纹理重复 */
-        background-repeat: no-repeat, repeat;
-    }
+            linear-gradient(135deg, #e8ecef 0%, #c9d6dc 100%),
+        /* 中层：噪点纹理（用SVG） */
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"),
+        /* 上层：风景图，设置透明度 */
+        url("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1920&q=80");
+    background-blend-mode: overlay, normal, normal; /* 第一层渐变用 overlay 混合，后两层正常 */
+    background-size: cover, 200px 200px, cover;
+    background-repeat: no-repeat, repeat, no-repeat;
+    background-position: center center;
+    /* 由于图片覆盖，需要降低图片的可见度，可以用伪元素，或直接在 URL 后加 opacity 滤镜 */
+}
     /* 去掉 Streamlit 默认的居中效果，内容区靠左 */
     .block-container {
         padding-left: 3rem !important;
