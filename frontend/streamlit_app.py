@@ -34,15 +34,7 @@ st.markdown("""
     background-size: cover, 200px 200px;
     background-repeat: no-repeat, repeat;
 }
-/* 保证内容区文字清晰 */
-.block-container {
-    background-color: rgba(255, 255, 255, 0.75) !important;
-    backdrop-filter: blur(4px);
-    border-radius: 10px;
-    padding: 1.5rem 2rem !important;
-    margin-left: 3rem !important;
-    max-width: 960px;
-}
+
 </style>
 """, unsafe_allow_html=True)
 
