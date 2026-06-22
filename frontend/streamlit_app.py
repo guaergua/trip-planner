@@ -12,49 +12,30 @@ st.set_page_config(
 )
 
 # ========== 自定义 CSS：背景有噪点 + 微弱渐变，避免紫色/靛蓝 ==========
-st.markdown(
-    """
-    <style>
-    /* 整个页面的背景：浅灰白到淡蓝绿的渐变，叠加噪点纹理（SVG 点阵） */
-    .stApp {
-        background-image: 
-            linear-gradient(135deg, #e8ecef 0%, #c9d6dc 100%),
-        /* 中层：噪点纹理（用SVG） */
-        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"),
-        /* 上层：风景图，设置透明度 */
-        url("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1920&q=80");
-    background-blend-mode: overlay, normal, normal; /* 第一层渐变用 overlay 混合，后两层正常 */
-    background-size: cover, 200px 200px, cover;
-    background-repeat: no-repeat, repeat, no-repeat;
-    background-position: center center;
-    /* 由于图片覆盖，需要降低图片的可见度，可以用伪元素，或直接在 URL 后加 opacity 滤镜 */
+st.markdown("""
+<style>
+.stApp::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-image: url("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1920&q=80");
+    background-size: cover;
+    background-position: center;
+    opacity: 0.12;   /* 调低透明度，文字清晰 */
+    z-index: -1;
+    pointer-events: none;
 }
-    /* 去掉 Streamlit 默认的居中效果，内容区靠左 */
-    .block-container {
-        padding-left: 3rem !important;
-        padding-right: 3rem !important;
-        max-width: 960px;
-        margin-left: 0;
-        margin-right: auto;
-    }
-    /* 输入框、按钮等不做居中，保持默认左对齐 */
-    .stTextInput, .stTextArea, .stNumberInput, .stButton {
-        text-align: left;
-    }
-    /* 避免任何 emoji 作为功能图标，用纯文字 */
-    /* 自定义结果卡片（非卡片布局，只是一段带背景的文本框） */
-    .result-box {
-        background: rgba(255,255,255,0.8);
-        border-left: 4px solid #4a90d9;
-        padding: 1rem;
-        border-radius: 4px;
-        margin-top: 1rem;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
+.stApp {
+    background-image: 
+        linear-gradient(135deg, #e8ecef 0%, #c9d6dc 100%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    background-blend-mode: overlay;
+    background-size: cover, 200px 200px;
+    background-repeat: no-repeat, repeat;
+}
+</style>
+""", unsafe_allow_html=True)
 # ========== 页面标题（不用 Hero，用简单的 H2） ==========
 st.markdown("## 旅行攻略生成器")
 st.markdown("填好下面几个信息，让 AI 帮你规划行程。")
