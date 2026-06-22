@@ -39,10 +39,7 @@ st.markdown(f"""
     pointer-events: none;
 }}
 
-div[data-testid="stToolbar"] {
-    display: none !important;
-}
-
+/* 其他你想要的样式... */
 </style>
 """, unsafe_allow_html=True)
 
