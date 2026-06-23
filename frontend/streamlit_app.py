@@ -97,32 +97,32 @@ if submitted:
                     timeout=90
                 )
                 if response.status_code == 200:
-                    data = response.json()
-                    plan = data.get("plan", data.get("result", ""))
-                    # 展示结果
-                    st.markdown(f"""
-                    <div class="result-box">
-                        <h4 style="margin-top:0; font-size:1.1em;">为您生成的攻略</h4>
-                        {plan}
-                    </div>
-                    """, unsafe_allow_html=True)
+    data = response.json()
+    plan = data.get("plan", data.get("result", ""))
+    # 展示结果
+    st.markdown(f"""
+    <div class="result-box">
+        <h4 style="margin-top:0; font-size:1.1em;">为您生成的攻略</h4>
+        {plan}
+    </div>
+    """, unsafe_allow_html=True)
 
-                    # ===下载攻略按钮 ===                    
-if plan:
-                        st.download_button(
-                            label="📥 下载攻略",
-                            data=plan.encode("utf-8"),
-                            file_name=f"{destination.strip()}_攻略.md",
-                            mime="text/markdown",
-                            use_container_width=True
-                        )
+    # ====== 下载攻略按钮 ======
+    if plan:
+        st.download_button(
+            label="📥 下载攻略",
+            data=plan.encode("utf-8"),
+            file_name=f"{destination.strip()}_攻略.md",
+            mime="text/markdown",
+            use_container_width=True
+        )
 
-                    # ==将本次结果存入历史记录 ===
-                    st.session_state.history.append({
-                        "time": datetime.now().strftime("%H:%M"),
-                        "destination": destination.strip(),
-                        "plan": plan
-                    })
+        # ====== 将本次结果存入历史记录 ======
+        st.session_state.history.append({
+            "time": datetime.now().strftime("%H:%M"),
+            "destination": destination.strip(),
+            "plan": plan
+        })
                 else:
                     st.error(f"服务器返回了错误（状态码 {response.status_code}）")
                     st.info("可能是后端模型超时或请求格式不对，请尝试刷新后重试。")
