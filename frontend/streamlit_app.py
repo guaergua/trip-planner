@@ -39,7 +39,10 @@ st.markdown(f"""
     pointer-events: none;
 }}
 
-/* 其他你想要的样式... */
+div[data-testid="InputInstructions"] {
+    display: none !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
