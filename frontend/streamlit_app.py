@@ -72,6 +72,8 @@ if destination:
         api_key = "38769ba6cb56cb61419113478ba38f97" 
         weather_url = f"https://api.openweathermap.org/data/2.5/weather?q={destination}&appid={api_key}&units=metric&lang=zh_cn"
         resp = requests.get(weather_url, timeout=5)
+        print("状态码:", resp.status_code)
+        print("返回内容:", resp.text)
         if resp.status_code == 200:
             data = resp.json()
             temp = data['main']['temp']
