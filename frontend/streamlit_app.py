@@ -19,7 +19,7 @@ if os.path.exists(img_path):
         img_b64 = base64.b64encode(f.read()).decode()
     img_url = f"data:image/avif;base64,{img_b64}"
 else:
-    img_url = "data:image/avif;base64,"  # 空图片，不显示
+    img_url = "data:image/avif;base64,"
 
 # ---------- 自定义 CSS ----------
 st.markdown(f"""
@@ -49,28 +49,7 @@ st.markdown("填好下面几个信息，让 AI 帮你规划行程。")
 # ========== 后端 URL 配置 ==========
 backend_url = "https://expert-lecturer-trident.ngrok-free.dev"
 
-response = requests.post(
-    f"{backend_url}/generate",
-    json=payload,
-    timeout=90
-)
-# ========== 输入表单 ==========
-with st.form("trip_form"):
-    col1, col2 = st.columns([3, 2])
-    with col1:
-        destination = st.text_input("你想去哪里？", placeholder="例如：北京、东京、巴黎")
-    with col2:
-        days = st.number_input("玩几天？", min_value=1, max_value=30, value=3, step=1)
-
-    st.markdown("---")
-    preferences = st.text_area(
-        "有什么特别的喜好或要求吗？",
-        placeholder="喜欢美食、历史景点、或者带孩子出行等",
-        height=120
-    )
-    submitted = st.form_submit_button("开始生成攻略", use_container_width=True)
-
-# ======显示目的地天气（在表单下方，提交前显示） =======
+# ========== 天气翻译字典 ==========
 weather_translation = {
     "Sunny": "晴天",
     "Clear": "晴朗",
@@ -99,32 +78,43 @@ weather_translation = {
     "Patchy light rain": "局部小雨",
     "Patchy moderate snow": "局部中雪",
     "Patchy heavy snow": "局部大雪",
-    # 可以继续添加常见词汇
 }
 
+# ========== 输入表单 ==========
+with st.form("trip_form"):
+    col1, col2 = st.columns([3, 2])
+    with col1:
+        destination = st.text_input("你想去哪里？", placeholder="例如：北京、东京、巴黎")
+    with col2:
+        days = st.number_input("玩几天？", min_value=1, max_value=30, value=3, step=1)
+
+    st.markdown("---")
+    # 后端要求字段名是 "style"，所以变量名改为 style，输入框标签保持用户友好
+    style = st.text_area(
+        "有什么特别的喜好或要求吗？",
+        placeholder="喜欢美食、历史景点、或者带孩子出行等",
+        height=120
+    )
+    submitted = st.form_submit_button("开始生成攻略", use_container_width=True)
+
+# ======显示目的地天气（在表单下方，提交前显示）======
 if destination:
     try:
-        # 请求 wttr.in，格式：描述 + 温度，显示摄氏度
         weather_url = f"https://wttr.in/{destination}?format=%C+%t&m"
         resp = requests.get(weather_url, timeout=5)
         if resp.status_code == 200:
             weather_raw = resp.text.strip()
-            # 提取描述和温度（格式：描述 +温度，如 "Sunny +29°C"）
-            # 使用 rsplit 从右侧分割一次，区分描述和温度
             parts = weather_raw.rsplit(' ', 1)
             if len(parts) == 2:
                 desc_en, temp = parts
-                # 翻译成中文，找不到则保留英文
                 desc_cn = weather_translation.get(desc_en, desc_en)
                 weather_display = f"{desc_cn} {temp}"
             else:
-                # 分割失败，直接显示原始内容
                 weather_display = weather_raw
             st.info(f"📍 {destination} 当前天气：{weather_display}")
         else:
             st.info(f"📍 无法获取 {destination} 的天气")
     except Exception as e:
-        # 如果 wttr.in 完全不可用，可尝试备用方案
         st.info(f"📍 天气服务暂时不可用")
 
 # ========== 处理提交 ==========
@@ -137,17 +127,17 @@ if submitted:
                 payload = {
                     "destination": destination.strip(),
                     "days": int(days),
-                    "preferences": preferences.strip()
+                    "style": style.strip()  # 字段名改为 style
                 }
+                # 请求路径改为 /generate，与 backend_url 一致
                 response = requests.post(
-                    f"{backend_url}/generate_trip",
+                    f"{backend_url}/generate",
                     json=payload,
                     timeout=90
                 )
                 if response.status_code == 200:
                     data = response.json()
                     plan = data.get("plan", data.get("result", ""))
-                    # 展示结果
                     st.markdown(f"""
                     <div class="result-box">
                         <h4 style="margin-top:0; font-size:1.1em;">为您生成的攻略</h4>
@@ -155,7 +145,6 @@ if submitted:
                     </div>
                     """, unsafe_allow_html=True)
 
-                    # ====== 下载攻略按钮 ======
                     if plan:
                         st.download_button(
                             label="📥 下载攻略",
@@ -164,8 +153,6 @@ if submitted:
                             mime="text/markdown",
                             use_container_width=True
                         )
-
-                        # ====== 将本次结果存入历史记录 ======
                         st.session_state.history.append({
                             "time": datetime.now().strftime("%H:%M"),
                             "destination": destination.strip(),
@@ -182,12 +169,11 @@ else:
     st.markdown("---")
     st.caption("填写左侧信息，点击「开始生成攻略」即可。")
 
-# ========展示历史攻略记录（放在页脚之前）============
+# ========展示历史攻略记录============
 if st.session_state.history:
     with st.expander("📋 历史攻略记录（点击展开）", expanded=False):
         for i, h in enumerate(st.session_state.history):
             st.markdown(f"**🕒 {h['time']} · {h['destination']}**")
-            # 只显示前200字避免页面过长
             st.caption(h['plan'][:200] + ("..." if len(h['plan']) > 200 else ""))
             st.divider()
 
