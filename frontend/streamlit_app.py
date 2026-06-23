@@ -67,21 +67,60 @@ with st.form("trip_form"):
     submitted = st.form_submit_button("开始生成攻略", use_container_width=True)
 
 # ======显示目的地天气（在表单下方，提交前显示） =======
+weather_translation = {
+    "Sunny": "晴天",
+    "Clear": "晴朗",
+    "Patchy rain nearby": "局部小雨",
+    "Light rain": "小雨",
+    "Moderate rain": "中雨",
+    "Heavy rain": "大雨",
+    "Cloudy": "多云",
+    "Overcast": "阴天",
+    "Fog": "雾",
+    "Mist": "薄雾",
+    "Partly cloudy": "局部多云",
+    "Thundery outbreaks": "雷阵雨",
+    "Light drizzle": "小毛毛雨",
+    "Freezing fog": "冻雾",
+    "Light snow": "小雪",
+    "Moderate snow": "中雪",
+    "Heavy snow": "大雪",
+    "Hail": "冰雹",
+    "Sleet": "雨夹雪",
+    "Torrential rain shower": "大暴雨",
+    "Light rain shower": "小阵雨",
+    "Moderate or heavy rain shower": "中到大阵雨",
+    "Light sleet showers": "小阵雨夹雪",
+    "Patchy light drizzle": "局部毛毛雨",
+    "Patchy light rain": "局部小雨",
+    "Patchy moderate snow": "局部中雪",
+    "Patchy heavy snow": "局部大雪",
+    # 可以继续添加常见词汇
+}
+
 if destination:
     try:
-        api_key = "38769ba6cb56cb61419113478ba38f97" 
-        weather_url = f"https://api.openweathermap.org/data/2.5/weather?q={destination}&appid={api_key}&units=metric&lang=zh_cn"
+        # 请求 wttr.in，格式：描述 + 温度，显示摄氏度
+        weather_url = f"https://wttr.in/{destination}?format=%C+%t&m"
         resp = requests.get(weather_url, timeout=5)
-        print("状态码:", resp.status_code)
-        print("返回内容:", resp.text)
         if resp.status_code == 200:
-            data = resp.json()
-            temp = data['main']['temp']
-            desc = data['weather'][0]['description']
-            st.info(f"📍 {destination} 当前天气：{desc} {temp:.0f}°C")
+            weather_raw = resp.text.strip()
+            # 提取描述和温度（格式：描述 +温度，如 "Sunny +29°C"）
+            # 使用 rsplit 从右侧分割一次，区分描述和温度
+            parts = weather_raw.rsplit(' ', 1)
+            if len(parts) == 2:
+                desc_en, temp = parts
+                # 翻译成中文，找不到则保留英文
+                desc_cn = weather_translation.get(desc_en, desc_en)
+                weather_display = f"{desc_cn} {temp}"
+            else:
+                # 分割失败，直接显示原始内容
+                weather_display = weather_raw
+            st.info(f"📍 {destination} 当前天气：{weather_display}")
         else:
             st.info(f"📍 无法获取 {destination} 的天气")
-    except:
+    except Exception as e:
+        # 如果 wttr.in 完全不可用，可尝试备用方案
         st.info(f"📍 天气服务暂时不可用")
 
 # ========== 处理提交 ==========
