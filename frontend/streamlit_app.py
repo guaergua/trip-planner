@@ -69,11 +69,14 @@ with st.form("trip_form"):
 # ======显示目的地天气（在表单下方，提交前显示） =======
 if destination:
     try:
-        weather_url = f"https://wttr.in/{destination}?lang=zh&format=%C+%t&m"
+        api_key = "9312e1f4cac859c30adcf88d18c7aada" 
+        weather_url = f"http://api.openweathermap.org/data/2.5/weather?q={destination}&appid={api_key}&units=metric&lang=zh_cn"
         resp = requests.get(weather_url, timeout=5)
         if resp.status_code == 200:
-            weather = resp.text.strip()
-            st.info(f"📍 {destination} 当前天气：{weather}")
+            data = resp.json()
+            temp = data['main']['temp']
+            desc = data['weather'][0]['description']
+            st.info(f"📍 {destination} 当前天气：{desc} {temp:.0f}°C")
         else:
             st.info(f"📍 无法获取 {destination} 的天气")
     except:
