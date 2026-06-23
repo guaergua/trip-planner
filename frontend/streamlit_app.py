@@ -137,7 +137,7 @@ if submitted:
                 )
                 if response.status_code == 200:
                     data = response.json()
-                    plan = data.get("plan", data.get("result", ""))
+                    plan = data.get("reply", "") 
                     st.markdown(f"""
                     <div class="result-box">
                         <h4 style="margin-top:0; font-size:1.1em;">为您生成的攻略</h4>
