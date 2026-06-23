@@ -5,7 +5,7 @@ import base64
 import os
 from datetime import datetime
 
-# ==================== 新增1：历史攻略记录初始化 ====================
+# ======历史攻略记录初始化 ======
 if "history" not in st.session_state:
     st.session_state.history = []
 
@@ -66,7 +66,7 @@ with st.form("trip_form"):
     )
     submitted = st.form_submit_button("开始生成攻略", use_container_width=True)
 
-# ==================== 新增2：显示目的地天气（在表单下方，提交前显示） ====================
+# ======显示目的地天气（在表单下方，提交前显示） =======
 if destination:
     try:
         weather_url = f"https://wttr.in/{destination}?format=%C+%t"
@@ -107,8 +107,8 @@ if submitted:
                     </div>
                     """, unsafe_allow_html=True)
 
-                    # ==================== 新增3：下载攻略按钮 ====================
-                    if plan:
+                    # ===下载攻略按钮 ===                    
+if plan:
                         st.download_button(
                             label="📥 下载攻略",
                             data=plan.encode("utf-8"),
@@ -117,7 +117,7 @@ if submitted:
                             use_container_width=True
                         )
 
-                    # ==================== 新增4：将本次结果存入历史记录 ====================
+                    # ==将本次结果存入历史记录 ===
                     st.session_state.history.append({
                         "time": datetime.now().strftime("%H:%M"),
                         "destination": destination.strip(),
@@ -134,7 +134,7 @@ else:
     st.markdown("---")
     st.caption("填写左侧信息，点击「开始生成攻略」即可。")
 
-# ==================== 新增5：展示历史攻略记录（放在页脚之前） ====================
+# ========展示历史攻略记录（放在页脚之前）============
 if st.session_state.history:
     with st.expander("📋 历史攻略记录（点击展开）", expanded=False):
         for i, h in enumerate(st.session_state.history):
