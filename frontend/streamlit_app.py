@@ -96,7 +96,7 @@ if submitted:
                     json=payload,
                     timeout=90
                 )
-                                if response.status_code == 200:
+                if response.status_code == 200:
                     data = response.json()
                     plan = data.get("plan", data.get("result", ""))
                     # 展示结果
