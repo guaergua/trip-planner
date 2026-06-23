@@ -69,7 +69,7 @@ with st.form("trip_form"):
 # ======显示目的地天气（在表单下方，提交前显示） =======
 if destination:
     try:
-        api_key = "9312e1f4cac859c30adcf88d18c7aada" 
+        api_key = "38769ba6cb56cb61419113478ba38f97" 
         weather_url = f"http://api.openweathermap.org/data/2.5/weather?q={destination}&appid={api_key}&units=metric&lang=zh_cn"
         resp = requests.get(weather_url, timeout=5)
         if resp.status_code == 200:
