@@ -69,7 +69,7 @@ with st.form("trip_form"):
 # ======显示目的地天气（在表单下方，提交前显示） =======
 if destination:
     try:
-        weather_url = f"https://wttr.in/{destination}?format=%C+%t"
+        weather_url = f"https://wttr.in/{destination}?format=%C+%t&lang=zh&m"
         resp = requests.get(weather_url, timeout=5)
         if resp.status_code == 200:
             weather = resp.text.strip()
