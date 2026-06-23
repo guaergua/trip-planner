@@ -79,6 +79,9 @@ if destination:
             st.info(f"📍 {destination} 当前天气：{desc} {temp:.0f}°C")
         else:
             st.info(f"📍 无法获取 {destination} 的天气")
+	    st.infof"请求URL: {weather_url}")
+	    st.info(f"状态码: {resp.status_code}")
+	    st.info(f"返回内容: {resp.text}")
     except:
         st.info(f"📍 天气服务暂时不可用")
 
