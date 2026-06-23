@@ -149,7 +149,7 @@ if submitted:
                         st.download_button(
                             label="📥 下载攻略",
                             data=plan.encode("utf-8"),
-                            file_name=f"{destination.strip()}_攻略.md",
+                            file_name=f"{destination.strip()}_攻略.txt",
                             mime="text/markdown",
                             use_container_width=True
                         )
