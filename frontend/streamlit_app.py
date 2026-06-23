@@ -47,9 +47,13 @@ st.markdown("## 旅行攻略生成器")
 st.markdown("填好下面几个信息，让 AI 帮你规划行程。")
 
 # ========== 后端 URL 配置 ==========
-backend_url = "https://expert-lecturer-trident.ngrok-free.dev/generate"  
-# 可改为实际的 ngrok 地址，如 "https://abc123.ngrok.io"
+backend_url = "https://expert-lecturer-trident.ngrok-free.dev"
 
+response = requests.post(
+    f"{backend_url}/generate",
+    json=payload,
+    timeout=90
+)
 # ========== 输入表单 ==========
 with st.form("trip_form"):
     col1, col2 = st.columns([3, 2])
