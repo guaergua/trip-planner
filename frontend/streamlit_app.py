@@ -39,22 +39,17 @@ st.markdown(f"""
     pointer-events: none;
 }}
 
-/* 其他你想要的样式... */
+/* 其他样式... */
 </style>
 """, unsafe_allow_html=True)
 
-# ========== 页面标题（不用 Hero，用简单的 H2） ==========
+# ========== 页面标题 ==========
 st.markdown("## 旅行攻略生成器")
 st.markdown("填好下面几个信息，让 AI 帮你规划行程。")
 
-# ========== 后端 URL 配置（允许用户修改，但默认都是 localhost） ==========
-with st.sidebar:
-    st.markdown("**后端服务地址**")
-    backend_url = st.text_input(
-        "API 地址",
-        value="http://localhost:8000",
-        help="如果后端部署在其他地方，请修改这里"
-    )
+# ========== 后端 URL 配置 ==========
+backend_url = "http://localhost:8000"  
+# 可改为实际的 ngrok 地址，如 "https://abc123.ngrok.io"
 
 # ========== 输入表单 ==========
 with st.form("trip_form"):
